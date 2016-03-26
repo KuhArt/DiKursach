@@ -1,0 +1,17 @@
+doctype html
+html(lang="en")
+  head
+    title Authorization
+    style
+      include vstyle.css
+    body
+      h1 Sign in to system
+      img(src='anonym.jpg' class='displayed')
+      p
+      p
+      form(action="/secret", method="post")
+        input(type="text" name="username", class= "textboxid")
+        p
+        input(type="password", name="secret", class= "textboxid")
+        p
+        input(type="submit", value="Sign in", class="great_btn ")
