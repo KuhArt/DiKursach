@@ -26,12 +26,25 @@ window.onload = function() {
     // Check to see if the browser supports the GeoLocation API.
     if (navigator.geolocation) {
         // Get the location
+        var lat, lon;
         navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude;
-            var lon = position.coords.longitude;
+            lat = position.coords.latitude;
+            lon = position.coords.longitude;
+
             // Show the map
             showMap(lat, lon);
         });
+        var sendButton = document.getElementById('send-button')
+        sendButton.addEventListener('click', function (event) {
+            var req = new XMLHttpRequest()
+            req.open('GET', '/location?' + 'lon=' + lon +'&lat='+lat, true)
+            req.send(null)
+            req.onreadystatechange = function () {
+                if (req.readyState === 4 && req.status === 200) {
+                    console.log(req.responseText, 'great job');
+                }
+            }
+        })
     } else {
         // Print out a message to the user.
         document.write('Your browser does not support GeoLocation');

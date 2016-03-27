@@ -26,6 +26,11 @@ router.get('/', function (req, res) {
 
 router.post('/usersdb', mydb.findAll);
 router.get('/usermap', mydb.getLocation)
+router.get('/location', function (req, res) {
+    console.log(req.query)
+    res.send('hi!')
+    res.end()
+})
 router.post('/secret', mydb.findByName);
 
 //router.post('/usermap', mygeo.findMe);
