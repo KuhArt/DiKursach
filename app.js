@@ -1,7 +1,8 @@
 var express = require('express'),
     path = require('path'),
     http = require('http'),
-    mydb = require('./routes/mydb');
+    mydb = require('./routes/mydb'),
+    session = require('express-session')
 //    mygeo = require('./routes/geodata') ;
 var router = express.Router();
 var app = express();
@@ -12,8 +13,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-app.use(router);
 app.use(express.static(path.join(__dirname, "public"))); // запуск статического файлового сервера, который смотрит на папку public/ (в нашем случае отдает index.html)
+app.use(session({
+    secret: 'Puka puk!!',
+    resave: false,
+    saveUninitialized: true
+}))
+app.use(router);
+
+function isAuthenticated (req, res, next) {
+    if (req.session.user) next()
+    else res.redirect('/')
+}
 
 router.all('/', function (req, res, next) {
   console.log('Someone made a request!');
@@ -24,9 +35,9 @@ router.get('/', function (req, res) {
   res.render('index');
 });
 
-router.post('/usersdb', mydb.findAll);
-router.get('/usermap', mydb.getLocation)
-router.get('/location', function (req, res) {
+router.post('/usersdb', isAuthenticated, mydb.findAll);
+router.get('/usermap', isAuthenticated, mydb.getLocation)
+router.get('/location', isAuthenticated,  function (req, res) {
     console.log(req.query)
     res.send('hi!')
     res.end()

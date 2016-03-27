@@ -33,6 +33,7 @@ module.exports.getLocation = function (req, res) {
 }
 
 module.exports.findByName = function(req, res) {
+    if (req.session.user) return res.render('secret', req.session.user);
     var name = req.body.username;
     var pass = req.body.secret;
     var user = {};
@@ -43,6 +44,7 @@ module.exports.findByName = function(req, res) {
                 user.username = name;
                 user.authorised = true;
                 user.address = items[0].hihiaddress;
+                req.session.user = user
                 res.render('secret', user);
             }
         });
